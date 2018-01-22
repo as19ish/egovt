@@ -1,4 +1,4 @@
 <?php
 header('content-type: application/json');
-echo 'false';
+echo 'true';
  ?>
