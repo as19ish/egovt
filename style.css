@@ -1,0 +1,71 @@
+body{
+	background: #e2e2e2;
+}
+
+header{
+	height: 60px;
+	width: 100%;
+	background: #fff;
+	top: 0;
+	position: fixed;
+	border-bottom: 1px solid #e2e2e2;
+}
+
+header h1{
+	margin-top: 15px;
+	margin-bottom: 15px;
+	font-size: 24px;
+	margin-left: 30px;
+	font-family: 'Open Sans', sans-serif;
+	letter-spacing: -1.5px;
+	display: inline-block;
+}
+
+.dropdown{
+	display: inline-block;
+	float: right;
+	margin-top: 12px;
+	margin-bottom: 12px;
+	margin-right: 60px;
+}
+
+section{
+	position: relative;
+	top: 70px;
+}
+
+.post h3{
+	display: inline-block;
+}
+
+.post button{
+	border: none;
+	border-radius: 3px;
+	background-color: #333;
+	color: #fff;
+	padding: 3px;
+	margin-left: 40px;
+}
+
+.post textarea{
+	height: 120px;
+	width: 80%;
+	border: none;
+	border-radius: 6px;
+	font-size: 18px;
+	padding: 1%;
+}
+
+.other h4{
+	position: relative;
+	top: 50px;
+}
+
+.other-post{
+	position: relative;
+	top: 50px;
+	height: 130px;
+	width: 100%;
+	background: #fff;
+	padding: 1%;
+}
