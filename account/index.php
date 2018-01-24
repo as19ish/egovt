@@ -1,10 +1,4 @@
-<?php
-//require "config.php";
-if (empty($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32));
-}
-$token = $_SESSION['token'];
-?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +32,7 @@ $token = $_SESSION['token'];
 					<input type="text" name="name"id="name" placeholder="Name" class="form-control" autocomplete="off" autocorrect="off">
 				</div>
 				<div>
-          <input type="hidden" name="token" value="<?php echo $token; ?>" >
+          <input type="hidden" name="token" value="<?php //echo $token; ?>" >
 				</div>
 				<div class="form-group">
 					<input type="text" name="username" id="username" placeholder="Username" class="form-control" autocomplete="off"autocorrect="off">
@@ -85,7 +79,7 @@ $token = $_SESSION['token'];
 					<input type="text" name="otp" id="otp" placeholder="otp [check your email]" class="form-control">
 				</div>
         <div >
-					<input type="hidden" name="token" id="token" placeholder="otp [check your email]" value="<?php echo $token; ?>">
+					<input type="hidden" name="token" id="token" placeholder="otp [check your email]" value="<?php //echo $token; ?>">
 				</div>
         <div class="form-group">
 					<input type="password" name="pass" id="pass" placeholder="Password" class="form-control">
