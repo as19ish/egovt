@@ -5,7 +5,7 @@ class User{
 
     private $user;
 
-    private $msg;
+    public $msg;
 
     private $permitedAttemps = 5;
 
@@ -61,28 +61,14 @@ class User{
         }
     }
 
-    public function registration($email,$fname,$lname,$pass){
+    public function registration($name,$username,$email,$mobile,$aadhar){
         $pdo = $this->pdo;
-        if($this->checkEmail($email)){
-            $this->msg = 'This email is already taken.';
-            return false;
-        }
-        if(!(isset($email) && isset($fname) && isset($lname) && isset($pass) && filter_var($email, FILTER_VALIDATE_EMAIL))){
-            $this->msg = 'Inesrt all valid requered fields.';
-            return false;
-        }
+        $confCode = mt_rand(100000,999999);
+        $stmt = $pdo->prepare('INSERT INTO users (fname, uname, email, mobile,aadhar,confirm_code) VALUES (?, ?, ?, ?,?,?)');
+        if($stmt->execute([$name,$username,$email,$mobile,$aadhar,$confCode])){
 
-        $pass = $this->hashPass($pass);
-        $confCode = $this->hashPass(date('Y-m-d H:i:s').$email);
-        $stmt = $pdo->prepare('INSERT INTO users (fname, lname, email, password, confirm_code) VALUES (?, ?, ?, ?, ?)');
-        if($stmt->execute([$fname,$lname,$email,$pass,$confCode])){
-            if($this->sendConfirmationEmail($email)){
-                return true;
-            }else{
-                $this->msg = 'confirmation email sending has failed.';
-                return false;
-            }
         }else{
+
             $this->msg = 'Inesrting a new user failed.';
             return false;
         }
@@ -185,18 +171,48 @@ class User{
     }
 
 
-    private function checkEmail($email){
+    public function checkEmail($email){
         $pdo = $this->pdo;
         $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? limit 1');
         $stmt->execute([$email]);
         if($stmt->rowCount() > 0){
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
         }
     }
 
+        public function checkMobile($mobile){
+            $pdo = $this->pdo;
+            $stmt = $pdo->prepare('SELECT id FROM users WHERE mobile = ? limit 1');
+            $stmt->execute([$mobile]);
+            if($stmt->rowCount() > 0){
+                return false;
+            }else{
+                return true;
+            }
+        }
 
+            public function checkAadhar($aadhar){
+                $pdo = $this->pdo;
+                $stmt = $pdo->prepare('SELECT id FROM users WHERE aadhar = ? limit 1');
+                $stmt->execute([$aadhar]);
+                if($stmt->rowCount() > 0){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+            public function checkUname($uname){
+                $pdo = $this->pdo;
+                $stmt = $pdo->prepare('SELECT id FROM users WHERE uname = ? limit 1');
+                $stmt->execute([$uname]);
+                if($stmt->rowCount() > 0){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
     private function registerWrongLoginAttemp($email){
         $pdo = $this->pdo;
         $stmt = $pdo->prepare('UPDATE users SET wrong_logins = wrong_logins + 1 WHERE email = ?');
@@ -219,59 +235,35 @@ class User{
     }
 
 
+    public function checkOtp($otp,$email){
+        $pdo = $this->pdo;
+        $stmt = $pdo->prepare('SELECT confirm_code FROM users WHERE email = ? limit 1');
+        $stmt->execute([$email]);
+        if($stmt->rowCount() > 0){
+           $fotp = $stmt->fetch();
 
-    public function listUsers(){
-        if(is_null($this->pdo)){
-            $this->msg = 'Connection did not work out!';
-            return [];
+           if($fotp[0]==$otp)
+           {
+
+             return true;
+           }
+           else {
+              return false;
+             }
         }else{
-            $pdo = $this->pdo;
-            $stmt = $pdo->prepare('SELECT id, fname, lname, email FROM users WHERE confirmed = 1');
-            $stmt->execute();
-            $result = $stmt->fetchAll();
-            return $result;
+            return false;
         }
     }
 
-    public function render($path,$vars = '') {
-        ob_start();
-        include($path);
-        return ob_get_clean();
-    }
 
-    public function indexHead() {
-        print $this->render(indexHead);
-    }
 
-    public function indexTop() {
-        print $this->render(indexTop);
-    }
 
-    public function loginForm() {
-        print $this->render(loginForm);
-    }
 
-    public function activationForm() {
-        print $this->render(activationForm);
-    }
 
-    public function indexMiddle() {
-        print $this->render(indexMiddle);
-    }
+  public  function crtstr($str){
 
-    public function registerForm() {
-        print $this->render(registerForm);
-    }
-
-    public function indexFooter() {
-        print $this->render(indexFooter);
-    }
-
-    public function userPage() {
-	$users = [];
-	if($_SESSION['user']['user_role'] == 2){
-		$users = $this->listUsers();
-	}
-        print $this->render(userPage,$users);
-    }
+		 $str =  trim($str);
+		 $str = nl2br(htmlentities(addslashes((strip_tags($str)))));
+		 return $str;
+	 }
 }
