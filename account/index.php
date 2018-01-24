@@ -1,5 +1,5 @@
 <?php
-require "config.php";
+//require "config.php";
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = bin2hex(random_bytes(32));
 }
