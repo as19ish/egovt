@@ -62,20 +62,22 @@ $token = $_SESSION['token'];
 			</form>
 			</div>
 
-			<div class="login" >
-				<form class="lg-frm">
+			<div class="login"  >
+				<form class="lg-frm" id="login" >
 				<div class="form-group">
-					<input type="text" name="user or email" placeholder="Name" class="form-control">
+					<input type="text" name="user" placeholder="Username" id="user" class="form-control">
 				</div>
-
+        <div >
+					<input type="hidden" name="token" value="<?php echo $token; ?>" >
+				</div>
 				<div class="form-group">
-					<input type="password" name="passwrd" placeholder="Password" class="form-control">
+					<input type="password" name="passwrd" placeholder="Password" id="passwrd" class="form-control">
 				</div>
 
 				<p>Forgot password?</p>
 
 
-				<button>login</button>
+				<button type="submit" name="login" value="login" id="b_login" >login</button>
 				<p class="ln">Dont have an account? <span id="sign_up">Sign up</span></p>
 			</form>
 			</div>
@@ -99,7 +101,7 @@ $token = $_SESSION['token'];
 			</div>
 	</div>
   <div id="snackbar"  ></div>
-	<script src="js/validate.js" async ></script>
-  <script src="js/main.js" async ></script>
+	<script src="js/validate.js" ></script>
+  <script src="js/main.js" ></script>
 </body>
 </html>

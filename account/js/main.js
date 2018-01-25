@@ -1,3 +1,4 @@
+var url = window.location.protocol+window.location.host;
 $('#log_in').click(function()
 {
 	$('.signup').hide();
@@ -210,10 +211,12 @@ $('#confirm').submit(function(e){
 		data : $('#confirm').serialize(),
 		success :function(data){
 			if(data['status']=='true'){
-				$('#snackbar').text('All Done...');
+				$('#snackbar').text('Redirecting...');
 				$('#snackbar').addClass('show');
 				setTimeout(function(){
 					$('#snackbar').removeClass('show');
+					$('.confirm').css({'display':'none'});
+					$('.login').css({'display':'block'});
 
 				}
 					,3000);
@@ -231,5 +234,58 @@ $('#confirm').submit(function(e){
 			}
 		},
 
+	});
+});
+$('#login').validate({
+	rules : {
+       user : {
+				 username : true,
+				 required : true,
+			 },
+			 passwrd : {
+				 required : true,
+			 }
+	},
+	messages : {
+       user : {
+				 username : "",
+				 required : "",
+			 },
+			 passwrd : {
+				 required : "",
+			 }
+	},
+	errorElement : "span",
+	highlight: function(element, errorClass, validClass) {
+			 console.log('#'+element.id);
+					$('#'+element.id).css({"box-shadow": "0 0 5px rgba(245, 26, 26, 1)",
+																 "border": "1px solid rgba(245, 26, 26, 1)"})
+				},
+		unhighlight:function(element, errorClass, validClass) {
+						$('#'+element.id).css({"box-shadow": "0 0 5px rgba(10, 160, 13, 1)",
+															"border": "1px solid #e2e2e2"})
+					},
+
+});
+$('#login').submit(function(e){
+	e.preventDefault();
+	$.ajax({
+		url : "process.php",
+		type : "post",
+		data : $('#login').serialize(),
+		success : function(data){
+        if(data['status']='true'){
+					$('#snackbar').text('Redirecting..');
+					$('#snackbar').addClass('show');
+					setTimeout(function(){
+						$('#snackbar').removeClass('show');
+            window.location.replace("../");
+					},3000);
+
+				}
+		},
+		error : function() {
+
+		}
 	});
 });

@@ -54,20 +54,30 @@ if(isset($_POST['username'])){
       echo json_encode($object);
       }
 }
+
 if(isset($_POST['otp']) and isset($_POST['pass']) and isset($_POST['token']) ){
-  if($_POST['otp'] == '' || $_POST['pass'] == '' || $_POST['token']== '' ){
+    if($_POST['otp'] == '' || $_POST['pass'] == '' || $_POST['token']== '' ){
 
   }
   else {
       $otp = $_POST['otp'];
       $pass = $user->hashPass($_POST['pass']);
       $email = $_SESSION['user']['email'];
-      
+
       if($user->confirmUser($otp,$pass,$email)){
         $object['status'] = 'true';
         $object['msg'] = "";
         echo json_encode($object);
       }
   }
+}
+if(isset($_POST['user']) and isset($_POST['token']) and isset($_POST['passwrd'])){
+if($_POST['token']==$_SESSION['token']){
+  if($user->login($_POST['user'],$_POST['passwrd']) ){
+    $object['status'] = 'true';
+    $object['msg'] = "";
+    echo json_encode($object);
+  }
+}
 }
  ?>

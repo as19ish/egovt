@@ -177,4 +177,28 @@ class User{
     }
 
   }
+  public function login($uname,$password){
+
+          $pdo = $this->pdo;
+          $stmt = $pdo->prepare('SELECT * FROM users WHERE uname = ? and active = "a" limit 1');
+          $stmt->execute([$uname]);
+          $user = $stmt->fetch();
+
+          if(password_verify($password,$user['hash'])){
+
+                  $this->user = $user;
+                  session_regenerate_id();
+                  $_SESSION['user']['id'] = $user['id'];
+                  $_SESSION['user']['fname'] = $user['fname'];
+                  $_SESSION['user']['email'] = $user['email'];
+                  return true;
+
+          }else{
+            
+              $this->msg = 'Invalid login information or the account is not activated.';
+              return false;
+          }
+
+  }
+
 }
