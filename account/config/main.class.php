@@ -39,6 +39,7 @@ class User{
         $stmt = $pdo->prepare('INSERT INTO users (fname, uname, email, mobile,aadhar,confirm_code) VALUES (?, ?, ?, ?,?,?)');
         if($stmt->execute([$name,$username,$email,$mobile,$aadhar,$confCode])){
                 //  $this->sendMobileOtp($confCode,$mobile);
+                $this->sendConfirmationEmail($email);
         }else{
 
             return false;

@@ -177,6 +177,8 @@ jQuery.validator.addMethod("email", function(value, element) {
 function signUpSubmit(){
 	$('#b_sign').attr('disabled','disabled');
 	$('#b_sign').css({'background':"#33333324"});
+	$('#snackbar').text('processing...');
+	$('#snackbar').addClass('show');
 	$.ajax({
 		url:"process.php",
 		type:"post",
@@ -184,6 +186,7 @@ function signUpSubmit(){
 		success:function(data){
 			if(data['match']=='true'){
 				if(data['status']=='true'){
+					$('#snackbar').removeClass('show');
 					$('#snackbar').text('Wait...');
 					$('#snackbar').addClass('show');
 					setTimeout(function(){
@@ -193,6 +196,7 @@ function signUpSubmit(){
 					}
 						,3000);
 				}else {
+					$('#snackbar').removeClass('show');
 				 $('#snackbar').text('Please Try Again ....');
 				 $('#snackbar').addClass('show');
 				 setTimeout(function(){
@@ -205,6 +209,7 @@ function signUpSubmit(){
 
 				}
 			}else {
+				$('#snackbar').removeClass('show');
 				$('#snackbar').text('Please Try Again ....');
 				$('#snackbar').addClass('show');
 				setTimeout(function(){
@@ -216,9 +221,11 @@ function signUpSubmit(){
 
 		},
 		error : function() {
+			$('#snackbar').removeClass('show');
 			$('#snackbar').text("Something Goes Wrong");
-		 $('#snackbar').addClass('show');
+		  $('#snackbar').addClass('show');
 	setTimeout(function(){
+
 		$('#snackbar').removeClass('show');
 		$('#b_sign').removeAttr('disabled');
 		$('#b_sign').css({'background':"#333"});
@@ -248,6 +255,7 @@ function confirmSubmit(){
 				}
 					,3000);
 			}else {
+				$('#snackbar').removeClass('show');
 			 $('#snackbar').text('Please Try Again ....');
 			 $('#snackbar').addClass('show');
 			 setTimeout(function(){
@@ -260,6 +268,7 @@ function confirmSubmit(){
 
 			}
 		}else {
+			$('#snackbar').removeClass('show');
 			$('#snackbar').text("Session Expired");
 			$('#snackbar').addClass('show');
 	setTimeout(function(){
@@ -269,6 +278,7 @@ function confirmSubmit(){
 		}
 		},
 		error : function() {
+			$('#snackbar').removeClass('show');
 			$('#snackbar').text("Something Goes Wrong");
 		 $('#snackbar').addClass('show');
 	setTimeout(function(){
