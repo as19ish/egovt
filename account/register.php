@@ -1,4 +1,3 @@
 <?php
-phpinfo();
-
- ?>
+require "config.php";
+echo $user->checkLogin(); ?>

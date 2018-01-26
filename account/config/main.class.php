@@ -38,8 +38,8 @@ class User{
         $confCode = mt_rand(100000,999999);
         $stmt = $pdo->prepare('INSERT INTO users (fname, uname, email, mobile,aadhar,confirm_code) VALUES (?, ?, ?, ?,?,?)');
         if($stmt->execute([$name,$username,$email,$mobile,$aadhar,$confCode])){
-                //  $this->sendMobileOtp($confCode,$mobile);
-                $this->sendConfirmationEmail($email,$confCode);
+                  $this->sendMobileOtp($confCode,$mobile);
+              //  $this->sendConfirmationEmail($email,$confCode);
         }else{
 
             return false;
@@ -192,9 +192,12 @@ class User{
 
                                 $this->user = $user;
                                 session_regenerate_id();
+                                $_SESSION['user']['login'] = 'true';
+                                $_SESSION['user']['username'] = $user['uname'];
                                 $_SESSION['user']['id'] = $user['id'];
                                 $_SESSION['user']['fname'] = $user['fname'];
                                 $_SESSION['user']['email'] = $user['email'];
+                                $_SESSION['user']['mobile'] = $user['mobile'];
                                 return 4;
 
                                }else{
@@ -227,6 +230,18 @@ class User{
       return false;
     }
   }
-
+public function checkLogin(){
+  if(isset($_SESSION['user']['login']) and isset($_SESSION['user']['username']) and
+     isset($_SESSION['user']['id']) and isset($_SESSION['user']['fname']) and
+    isset($_SESSION['user']['email']) and isset($_SESSION['user']['mobile']) ){
+        if($_SESSION['user']['login'] == 'true'){
+          return true;
+        }else{
+          return false;
+        }
+     }else{
+       return false;
+     }
+   }
 
 }
