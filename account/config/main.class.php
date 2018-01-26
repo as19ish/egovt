@@ -39,7 +39,7 @@ class User{
         $stmt = $pdo->prepare('INSERT INTO users (fname, uname, email, mobile,aadhar,confirm_code) VALUES (?, ?, ?, ?,?,?)');
         if($stmt->execute([$name,$username,$email,$mobile,$aadhar,$confCode])){
                 //  $this->sendMobileOtp($confCode,$mobile);
-                $this->sendConfirmationEmail($email);
+                $this->sendConfirmationEmail($email,$confCode);
         }else{
 
             return false;
@@ -51,13 +51,11 @@ class User{
     return true;
 
     }
-    private function sendConfirmationEmail($email){
-        $pdo = $this->pdo;
-        $stmt = $pdo->prepare('SELECT confirm_code FROM users WHERE email = ? limit 1');
-        $stmt->execute([$email]);
-        $code = $stmt->fetch();
+    private function sendConfirmationEmail($email,$code){
+
+
         $subject = 'Confirm your registration';
-        $message = 'Please confirm you registration by pasting this code in the confirmation box: '.$code['confirm_code'];
+        $message = 'Please confirm you registration by pasting this code in the confirmation box: '.$code;
         $headers = 'X-Mailer: PHP/' . phpversion();
 
         if(mail($email, $subject, $message, $headers)){
