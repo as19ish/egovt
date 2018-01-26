@@ -320,6 +320,7 @@ function loginSubmit() {
 	$('#b_login').attr("disabled","disabled");
 	$('#b_login').css({'background':"#33333324"});
 	$('#snackbar').text('processing...');
+	$('#snackbar').addClass('show');
 	$.ajax({
 		url : "process.php",
 		type : "post",
