@@ -65,7 +65,7 @@ $token = $_SESSION['token'];
 			<div class="login"  >
 				<form class="lg-frm" id="login" >
 				<div class="form-group">
-					<input type="text" name="user" placeholder="Username" id="user" class="form-control">
+					<input type="text" name="user" placeholder="Username" id="user"  class="form-control">
 				</div>
         <div >
 					<input type="hidden" name="token" value="<?php echo $token; ?>" >

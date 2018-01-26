@@ -20,8 +20,10 @@ jQuery.validator.addMethod("email", function(value, element) {
   return this.optional( element ) || /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test( value );
 }, 'Please enter a valid email');
 
-	var validator =	$("#signup").validate({
-
+		$("#signup").validate({
+			submitHandler: function(form) {
+		 	 signUpSubmit();
+		  },
 			rules: {
 				name: {
 					required: true,
@@ -119,8 +121,15 @@ jQuery.validator.addMethod("email", function(value, element) {
 
 		});
 		$( "#confirm" ).validate({
+			submitHandler: function(form) {
+		    confirmSubmit();
+		  },
   rules: {
-    pass: "required",
+    pass: {
+			required : true,
+			minlength : 6,
+			maxlength : 14,
+		},
     rpass: {
       equalTo: "#pass"
     },
@@ -165,44 +174,61 @@ jQuery.validator.addMethod("email", function(value, element) {
 
 
 });
-$('#signup').submit(function(e){
-	e.preventDefault();
+function signUpSubmit(){
 	$('#b_sign').attr('disabled','disabled');
 	$('#b_sign').css({'background':"#33333324"});
 	$.ajax({
 		url:"process.php",
 		type:"post",
 		data:$('#signup').serialize(),
-
 		success:function(data){
-			console.log(data['status']);
- if(data['status']=='true'){
-   $('#snackbar').text('Wait...');
-	 $('#snackbar').addClass('show');
-	 setTimeout(function(){
-		 $('#snackbar').removeClass('show');
-     $('.signup').css({'display':'none'});
-     $('.confirm').css({'display':'block'});
-	 }
-		 ,3000);
- }else {
- 	$('#snackbar').text('Please Try Again ....');
-	$('#snackbar').addClass('show');
+			if(data['match']=='true'){
+				if(data['status']=='true'){
+					$('#snackbar').text('Wait...');
+					$('#snackbar').addClass('show');
+					setTimeout(function(){
+						$('#snackbar').removeClass('show');
+						$('.signup').css({'display':'none'});
+						$('.confirm').css({'display':'block'});
+					}
+						,3000);
+				}else {
+				 $('#snackbar').text('Please Try Again ....');
+				 $('#snackbar').addClass('show');
+				 setTimeout(function(){
+					 $('#snackbar').removeClass('show');
+					 $('#b_sign').removeAttr('disabled');
+					 $('#b_sign').css({'background':"#333"});
+
+				 }
+					 ,3000);
+
+				}
+			}else {
+				$('#snackbar').text('Please Try Again ....');
+				$('#snackbar').addClass('show');
+				setTimeout(function(){
+					$('#snackbar').removeClass('show');
+					$('#b_sign').removeAttr('disabled');
+					$('#b_sign').css({'background':"#333"});
+			});}
+
+
+		},
+		error : function() {
+			$('#snackbar').text("Something Goes Wrong");
+		 $('#snackbar').addClass('show');
 	setTimeout(function(){
 		$('#snackbar').removeClass('show');
 		$('#b_sign').removeAttr('disabled');
 		$('#b_sign').css({'background':"#333"});
 
-	}
-		,3000);
-
- }
-
+		 },3000);
 		}
 	});
-});
-$('#confirm').submit(function(e){
-	e.preventDefault();
+};
+function confirmSubmit(){
+
 	$('#b_confirm').attr('disabled','disabled');
 	$('#b_confirm').css({'background':"#33333324"});
 	$.ajax({
@@ -210,8 +236,9 @@ $('#confirm').submit(function(e){
 		type : "post",
 		data : $('#confirm').serialize(),
 		success :function(data){
+			if(data['match']=='true'){
 			if(data['status']=='true'){
-				$('#snackbar').text('Redirecting...');
+				$('#snackbar').text('Now login...');
 				$('#snackbar').addClass('show');
 				setTimeout(function(){
 					$('#snackbar').removeClass('show');
@@ -232,11 +259,32 @@ $('#confirm').submit(function(e){
 				 ,3000);
 
 			}
+		}else {
+			$('#snackbar').text("Session Expired");
+			$('#snackbar').addClass('show');
+	setTimeout(function(){
+			location.reload();
+
+		},2000);
+		}
 		},
+		error : function() {
+			$('#snackbar').text("Something Goes Wrong");
+		 $('#snackbar').addClass('show');
+	setTimeout(function(){
+		$('#snackbar').removeClass('show');
+		$('#b_confirm').removeAttr('disabled');
+		$('#b_confirm').css({'background':"#333"});
+
+		 },3000);
+	 },
 
 	});
-});
+};
 $('#login').validate({
+	submitHandler: function(form) {
+    loginSubmit();
+  },
 	rules : {
        user : {
 				 username : true,
@@ -267,25 +315,51 @@ $('#login').validate({
 					},
 
 });
-$('#login').submit(function(e){
-	e.preventDefault();
+function loginSubmit() {
+
+	$('#b_login').attr("disabled","disabled");
+	$('#b_login').css({'background':"#33333324"});
 	$.ajax({
 		url : "process.php",
 		type : "post",
 		data : $('#login').serialize(),
 		success : function(data){
-        if(data['status']='true'){
-					$('#snackbar').text('Redirecting..');
-					$('#snackbar').addClass('show');
-					setTimeout(function(){
-						$('#snackbar').removeClass('show');
-            window.location.replace("../");
-					},3000);
+  if(data['match']=='true'){
+		if(data['status']=='true'){
+			$('#snackbar').text('Redirecting..');
+			$('#snackbar').addClass('show');
+			setTimeout(function(){
+					window.location.replace("../");
+			},2000);
 
-				}
+		}else{
+					 $('#snackbar').text(data['msg']);
+					 $('#snackbar').addClass('show');
+	setTimeout(function(){
+					 $('#snackbar').removeClass('show');
+           $('#b_login').removeAttr('disabled');
+					 $('#b_login').css({'background':"#333"});
+					 },3000);
+		}
+	}else{
+		$('#snackbar').text("Session Expired");
+		$('#snackbar').addClass('show');
+setTimeout(function(){
+		location.reload();
+
+	},2000);
+	}
+
 		},
 		error : function() {
+			$('#snackbar').text("Something Goes Wrong");
+		 $('#snackbar').addClass('show');
+	setTimeout(function(){
+		$('#snackbar').removeClass('show');
+		$('#b_login').removeAttr('disabled');
+		$('#b_login').css({'background':"#333"});
 
+		 },3000);
 		}
 	});
-});
+};
