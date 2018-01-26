@@ -1,15 +1,37 @@
 <?php
-function sendConfirmationEmail($email){
-        $code = '88888';
-        $subject = 'Confirm your registration';
-        $message = 'Please confirm you registration by pasting this code in the confirmation box: '.$code;
-        $headers = 'X-Mailer: PHP/' . phpversion();
 
-        if(mail($email, $subject, $message, $headers)){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    sendConfirmationEmail('as19ish@gmail.com');
-?>
+require_once "vendor/autoload.php";
+
+//PHPMailer Object
+$mail = new PHPMailer;
+
+//From email address and name
+$mail->From = "no-reoly@egovt.herokuapp.com";
+$mail->FromName = "no-reply";
+
+//To address and name
+//$mail->addAddress("recepient1@example.com", "Recepient Name");
+$mail->addAddress("as19ish@gmail.com"); //Recipient name is optional
+
+//Address to which recipient will reply
+//$mail->addReplyTo("reply@yourdomain.com", "Reply");
+
+//CC and BCC
+//$mail->addCC("cc@example.com");
+//$mail->addBCC("bcc@example.com");
+
+//Send HTML or Plain Text email
+$mail->isHTML(true);
+
+$mail->Subject = "Subject Text";
+$mail->Body = "<i>Mail body in HTML</i>";
+$mail->AltBody = "This is the plain text version of the email content";
+
+if(!$mail->send())
+{
+    echo "Mailer Error: " . $mail->ErrorInfo;
+}
+else
+{
+    echo "Message has been sent successfully";
+}
