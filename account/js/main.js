@@ -319,6 +319,7 @@ function loginSubmit() {
 
 	$('#b_login').attr("disabled","disabled");
 	$('#b_login').css({'background':"#33333324"});
+	$('#snackbar').text('processing...');
 	$.ajax({
 		url : "process.php",
 		type : "post",
@@ -326,13 +327,14 @@ function loginSubmit() {
 		success : function(data){
   if(data['match']=='true'){
 		if(data['status']=='true'){
+			$('#snackbar').removeClass('show');
 			$('#snackbar').text('Redirecting..');
 			$('#snackbar').addClass('show');
 			setTimeout(function(){
 					window.location.replace("../");
 			},2000);
 
-		}else{
+		}else{ $('#snackbar').removeClass('show');
 					 $('#snackbar').text(data['msg']);
 					 $('#snackbar').addClass('show');
 	setTimeout(function(){
@@ -342,6 +344,7 @@ function loginSubmit() {
 					 },3000);
 		}
 	}else{
+		$('#snackbar').removeClass('show');
 		$('#snackbar').text("Session Expired");
 		$('#snackbar').addClass('show');
 setTimeout(function(){

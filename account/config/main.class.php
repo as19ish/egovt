@@ -38,7 +38,7 @@ class User{
         $confCode = mt_rand(100000,999999);
         $stmt = $pdo->prepare('INSERT INTO users (fname, uname, email, mobile,aadhar,confirm_code) VALUES (?, ?, ?, ?,?,?)');
         if($stmt->execute([$name,$username,$email,$mobile,$aadhar,$confCode])){
-                  $this->sendMobileOtp($confCode,$mobile);
+                //  $this->sendMobileOtp($confCode,$mobile);
         }else{
 
             return false;
