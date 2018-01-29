@@ -199,7 +199,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 
 						<div class="post-item">
-							<h3>Complaints are here</h3>
+							<h3>My Complaints</h3>
 							<?php if($myComplaints=myComplaintsExist()){foreach ($myComplaints as $key => $value): ?>
 								<div class="panel panel-default"style="cursor: pointer;" onclick="redirect('<?php echo $myComplaints[$key]["qid"]; ?>')" >
 									 <div class="panel-body">
@@ -218,29 +218,8 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 										 </div>
 									 </div>
 							 </div>
-						 <?php endforeach; }else {?>
-							 <div class="panel panel-default">
-								 <div class="panel-body">
-									 <div class="views">
-										 <center><h4>0<br>Views</h4></center>
-									 </div>
-									 <div class="link">
+						 <?php endforeach; } ?>
 
-											 <span style="font-size: 19px;font-weight: bold;">Complaint Title</span>&nbsp&nbsp<span  style="font-size: 17px;" >Description.....</span>
-									 </div>
-									 <div class="time">
-										 <span >
-											 <?php
-													$time = time();
-													$actual_time = date('D M Y ,  H:i:s' ,$time);
-													echo $actual_time;
-												?>
-										 </span>
-										 <span><a href="#">@user</a></span>
-									 </div>
-								 </div>
-						 </div>
-	<?php }?>
 
 							</div>
 						</div>
