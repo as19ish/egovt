@@ -12,6 +12,6 @@ define('dbPass', 'hnIfxlY1Er');
 //define('dbPass', 'qazplm123');
 $user = new User();
 if(!$user->dbConnect(conString, dbUser, dbPass)){
-  die($user->getMsg());
+  die('connection lost');
 
 }

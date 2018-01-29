@@ -1,4 +1,4 @@
-var url = window.location.protocol+window.location.host;
+
 $('#log_in').click(function()
 {
 	$('.signup').hide();
@@ -66,7 +66,6 @@ jQuery.validator.addMethod("email", function(value, element) {
 					required: true,
 					minlength: 12,
 					maxlength: 12,
-					digits: true,
 					remote: {
 			 url: "ajax.php",
 			 type: "post",
@@ -342,7 +341,7 @@ function loginSubmit() {
 			$('#snackbar').text('Redirecting..');
 			$('#snackbar').addClass('show');
 			setTimeout(function(){
-					window.location.replace("../");
+					window.location.replace("../dashboard");
 			},2000);
 
 		}else{ $('#snackbar').removeClass('show');

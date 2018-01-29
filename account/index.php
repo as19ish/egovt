@@ -1,5 +1,8 @@
 <?php
 require "config.php";
+if($user->checkLogin()){
+  header('Location: ../dashboard');
+}
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = md5(uniqid(rand(), TRUE));
 }
@@ -9,7 +12,8 @@ $token = $_SESSION['token'];
 <html>
 <head>
 	<title>Accounts | eGov</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <meta name="HandheldFriendly" content="true" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="https://fonts.googleapis.com/css?family=Kite+One|Pacifico" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
@@ -21,9 +25,7 @@ $token = $_SESSION['token'];
 <body>
 
 	<div class="foto">
-		<div class="wrap">
-			<img src="static/photos/index.png" draggable="false" >
-		</div>
+
 	</div>
 
 	<div class="log">
@@ -52,7 +54,7 @@ $token = $_SESSION['token'];
 					<input type="text" name="mobile" id="mobile" placeholder="Mobile no " class="form-control" autocomplete="off">
 				</div>
                 <div class="form-group">
-					<input type="text" name="aadhar" id="aadhar" placeholder="Aadhar no " class="form-control" autocomplete="off">
+					<input type="text" name="aadhar" id="aadhar"  placeholder="Aadhar no " class="form-control" autocomplete="off">
 				</div>
 				<button type="submit" name="signup" value="signup" id="b_sign" >Sign up</button>
 
@@ -84,7 +86,7 @@ $token = $_SESSION['token'];
       <div class="confirm" >
 				<form class="lg-frm" id="confirm" >
 				<div class="form-group">
-					<input type="text" name="otp" id="otp" placeholder="otp [check your email]" class="form-control">
+					<input type="text" name="otp" id="otp" placeholder="otp [check email or mobile]" class="form-control">
 				</div>
         <div >
 					<input type="hidden" name="token" id="token" placeholder="otp [check your email]" value="<?php echo $token; ?>">
@@ -101,7 +103,7 @@ $token = $_SESSION['token'];
 			</div>
 	</div>
   <div id="snackbar"  ></div>
-	<script src="js/validate.js" ></script>
+  <script src="js/validate.js" ></script>
   <script src="js/main.js" ></script>
 </body>
 </html>

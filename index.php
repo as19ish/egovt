@@ -1,108 +1,98 @@
+<?php
+header( "refresh:3;url=dashboard" );
+ ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<title>Dashboard Community</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#889aa0">
+	<title>eGOV | Uttarakhand Sarkaar Initiative</title>
+	<link href="https://fonts.googleapis.com/css?family=Monoton|Open+Sans|Righteous" rel="stylesheet">
+	<style>
+		html{
+			height: 100%;
+			width: 100%;
+		}
 
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		body{
+			margin: 0;
+			background: url(mountains.png);
+			background-position: center;
+			background-attachment: fixed;
+			background-size: cover;
+			background-repeat: no-repeat;
+			height: 100%;
+			width: 100%;
+		}
 
-	<!-- jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		.overlay{
+			height: 100%;
+			width: 100%;
+			background: rgba(0,0,0, 0.36);
+			text-align: center;
+		}
 
-	<!-- Latest compiled JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		span{
+			font-size: 44px;
+			position: relative;
+			top: 100px;
+			margin: 0;
+			color: #fff;
+			font-weight: 900;
+			letter-spacing: 4px;
+			text-align: center;
+		}
 
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		@media(max-width: 749px){
+			span{
+				top: 60px;
+			}
+		}
 
+		.overlay img{
+			top: 120px;
+			position: relative;
+			height: 150px;
+			width: 150px;
+		}
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		@media(max-width: 749px){
+			.overlay img{
+				top: 70px;
+			}
+		}
 
-	<link rel="stylesheet" type="text/css" href="style.css">
+		h2{
+			position: relative;
+			top: 130px;
+			color: #fff;
+			letter-spacing: 2px;
+			font-family: 'Open Sans', sans-serif;
+		}
 
+		@media(max-width: 749px){
+			h2{
+				top: 90px;
+				font-size: 22px;
+			}
+		}
+
+		p {
+			position: absolute;
+			right: 30px;
+			bottom: 0;
+			color: #fff;
+			font-family: 'Open Sans', sans-serif;
+		}
+	</style>
 </head>
 <body>
-	<header>
-		<h1>eGOV</h1>
-		<div class="dropdown">
-			<button class="btn btn-default dropdown-toggle" type="button" toggle="dropdown">Log in
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">Sign up</a></li>
-			</ul>
-		</div>
-	</header>
-
-	<section>
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-8">
-					<div class="post">
-						<table>
-							<tr>
-								<td>
-									<label>Title</label>
-								</td>
-								<td>
-									<div class="form-group">
-										<input type="text" name="" placeholder="Whats your complaint? Be specific" class="form-control">
-									</div>
-								</td>
-								<td>
-									<button>How to ask</button>
-								</td>
-							</tr>
-						</table>
-
-						<div class="form-group">
-							<div class="upload">
-								<label class="uploadlabel">
-								Upload image
-								<input type="file" name="" class="form-control">
-								</label>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<textarea class="form-control"></textarea>
-						</div>
-
-						<!--<div class="contac">
-							<div class="row-fluid">
-								<div class="col-md-6">
-									<div class="form-group">
-										<input type="text" class="form-control">
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<input type="text" name="" class="form-control" placeholder="num">
-									</div>
-								</div>
-							</div>
-						</div>-->
-
-						<div class="butn">
-							<button class="btn btn-primary">Post Your Complaint</button>
-						</div>
-
-						<div style="width: 400px;border:1px solid #333;">
-							<a href="" style="display: inline-block;">dgsfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdfUYEWGOYEBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBDSJFXJX</a>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-4">
-					<div class="other">
-						<h4>Other Question?</h4>
-					</div>
-					<div class="other-post">
-
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+	<div class="overlay">
+		<span style="font-family: 'Righteous', cursive;">e</span><span style="font-family: 'Monoton', cursive;">GOV</span><br>
+		<img src="uklogo.png" draggable="false">
+		<h2>UTTARAKHAND Sarkaar Initiative</h2>
+		<p>&copy; ShC</p>
+	</div>
 </body>
 </html>

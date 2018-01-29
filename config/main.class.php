@@ -1,11 +1,7 @@
 <?php
 
 class User{
-        private $pdo;
-
-    private $user;
-
-    public $msg;
+    private $pdo;
 
     private $permitedAttemps = 5;
 
@@ -25,245 +21,174 @@ class User{
         }
     }
 
-    public function getUser(){
-        return $this->user;
-    }
+public function checkElectedMember($member){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select id from assemblymembers where electedMember = ?');
+  $stmt->execute([$member]);
+  if($stmt->rowCount() == 1){
+      $id = $stmt->fetch();
+      return $id[0];
+  }else{
+      return false;
+  }
 
-    public function login($email,$password){
-        if(is_null($this->pdo)){
-            $this->msg = 'Connection did not work out!';
-            return false;
+}
+public function reportVariable($name){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('SELECT * FROM `assemblymembers` WHERE electedMember = ? limit 1');
+  $stmt->execute([$name]);
+  if($stmt->rowCount() == 1){
+      $id = $stmt->fetch();
+      return $id;
+  }else{
+      return false;
+  }
+}
+
+public function checkLogin(){
+  if(isset($_SESSION['user']['login']) and isset($_SESSION['user']['username']) and
+     isset($_SESSION['user']['id']) and isset($_SESSION['user']['fname']) and
+    isset($_SESSION['user']['email']) and isset($_SESSION['user']['mobile']) ){
+        if($_SESSION['user']['login'] == 'true'){
+          return true;
         }else{
-            $pdo = $this->pdo;
-            $stmt = $pdo->prepare('SELECT id, fname, lname, email, wrong_logins, password, user_role FROM users WHERE email = ? and confirmed = 1 limit 1');
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
-
-            if(password_verify($password,$user['password'])){
-                if($user['wrong_logins'] <= $this->permitedAttemps){
-                    $this->user = $user;
-                    session_regenerate_id();
-                    $_SESSION['user']['id'] = $user['id'];
-                    $_SESSION['user']['fname'] = $user['fname'];
-                    $_SESSION['user']['lname'] = $user['lname'];
-                    $_SESSION['user']['email'] = $user['email'];
-                    $_SESSION['user']['user_role'] = $user['user_role'];
-                    return true;
-                }else{
-                    $this->msg = 'This user account is blocked, please contact our support department.';
-                    return false;
-                }
-            }else{
-                $this->registerWrongLoginAttemp($email);
-                $this->msg = 'Invalid login information or the account is not activated.';
-                return false;
-            }
+          return false;
         }
-    }
+     }else{
+       return false;
+     }
+   }
 
-    public function registration($name,$username,$email,$mobile,$aadhar){
-        $pdo = $this->pdo;
-        $confCode = mt_rand(100000,999999);
-        $stmt = $pdo->prepare('INSERT INTO users (fname, uname, email, mobile,aadhar,confirm_code) VALUES (?, ?, ?, ?,?,?)');
-        if($stmt->execute([$name,$username,$email,$mobile,$aadhar,$confCode])){
-
-        }else{
-
-            $this->msg = 'Inesrting a new user failed.';
-            return false;
+public function otherComplaints($id){
+  $pdo = $this->pdo;
+  $otherComplaints =array();
+  if($id){
+    $stmt = $pdo->prepare('select * from complaints where uid != ? group by time desc Limit 5');
+    $stmt->execute([$id]);
+    if($stmt->rowCount() > 0){
+        while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+          $otherComplaints[]=$result;
         }
+              return $otherComplaints;
+    }else{
+        return false;
+    }
+  }else{
+  $stmt = $pdo->prepare('select * from complaints  group by time desc Limit 5');
+  $stmt->execute([$id]);
+  if($stmt->rowCount() > 0){
+      while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $otherComplaints[]=$result;
+      }
+            return $otherComplaints;
+  }else{
+      return false;
+  }
+}
+
+}
+public function myComplaints($id){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select * from complaints where uid = ? group by time desc Limit 5');
+  $stmt->execute([$id]);
+  if($stmt->rowCount() > 0){
+      while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $myComplaints[]=$result;
+      }
+            return $myComplaints;
+  }else{
+      return false;
+  }
+
+}
+public function addComplaints($qid,$prob,$uid,$title){
+    $pdo = $this->pdo;
+    $stmt = $pdo->prepare('INSERT INTO `complaints` (`qid`,`prob`,`uid`,`title`) VALUES(?,?,?,?)');
+    $stmt->execute([$qid,$prob,$uid,$title]);
+    if($stmt->rowCount()==1){
+      return true;
+    }else {
+      return false;
     }
 
-    private function sendConfirmationEmail($email){
-        $pdo = $this->pdo;
-        $stmt = $pdo->prepare('SELECT confirm_code FROM users WHERE email = ? limit 1');
-        $stmt->execute([$email]);
-        $code = $stmt->fetch();
-
-        $subject = 'Confirm your registration';
-        $message = 'Please confirm you registration by pasting this code in the confirmation box: '.$code['confirm_code'];
-        $headers = 'X-Mailer: PHP/' . phpversion();
-
-        if(mail($email, $subject, $message, $headers)){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-
-    public function emailActivation($email,$confCode){
-        $pdo = $this->pdo;
-        $stmt = $pdo->prepare('UPDATE users SET confirmed = 1 WHERE email = ? and confirm_code = ?');
-        $stmt->execute([$email,$confCode]);
-        if($stmt->rowCount()>0){
-            $stmt = $pdo->prepare('SELECT id, fname, lname, email, wrong_logins, user_role FROM users WHERE email = ? and confirmed = 1 limit 1');
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
-
-            $this->user = $user;
-            session_regenerate_id();
-            if(!empty($user['email'])){
-            	$_SESSION['user']['id'] = $user['id'];
-	            $_SESSION['user']['fname'] = $user['fname'];
-	            $_SESSION['user']['lname'] = $user['lname'];
-	            $_SESSION['user']['email'] = $user['email'];
-	            $_SESSION['user']['user_role'] = $user['user_role'];
-	            return true;
-            }else{
-            	$this->msg = 'Account activitation failed.';
-            	return false;
-            }
-        }else{
-            $this->msg = 'Account activitation failed.';
-            return false;
-        }
-    }
-
-    public function passwordChange($id,$pass){
-        $pdo = $this->pdo;
-        if(isset($id) && isset($pass)){
-            $stmt = $pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
-            if($stmt->execute([$id,$this->hashPass($pass)])){
-                return true;
-            }else{
-                $this->msg = 'Password change failed.';
-                return false;
-            }
-        }else{
-            $this->msg = 'Provide an ID and a password.';
-            return false;
-        }
-    }
-
-
-    public function assignRole($id,$role){
-        $pdo = $this->pdo;
-        if(isset($id) && isset($role)){
-            $stmt = $pdo->prepare('UPDATE users SET role = ? WHERE id = ?');
-            if($stmt->execute([$id,$role])){
-                return true;
-            }else{
-                $this->msg = 'Role assign failed.';
-                return false;
-            }
-        }else{
-            $this->msg = 'Provide a role for this user.';
-            return false;
-        }
-    }
-
-
-    public function userUpdate($id,$fname,$lname){
-        $pdo = $this->pdo;
-        if(isset($id) && isset($fname) && isset($lname)){
-            $stmt = $pdo->prepare('UPDATE users SET fname = ?, lname = ? WHERE id = ?');
-            if($stmt->execute([$id,$fname,$lname])){
-                return true;
-            }else{
-                $this->msg = 'User information change failed.';
-                return false;
-            }
-        }else{
-            $this->msg = 'Provide a valid data.';
-            return false;
-        }
-    }
-
-
-    public function checkEmail($email){
-        $pdo = $this->pdo;
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? limit 1');
-        $stmt->execute([$email]);
-        if($stmt->rowCount() > 0){
-            return false;
-        }else{
-            return true;
-        }
-    }
-
-        public function checkMobile($mobile){
-            $pdo = $this->pdo;
-            $stmt = $pdo->prepare('SELECT id FROM users WHERE mobile = ? limit 1');
-            $stmt->execute([$mobile]);
-            if($stmt->rowCount() > 0){
-                return false;
-            }else{
-                return true;
-            }
-        }
-
-            public function checkAadhar($aadhar){
-                $pdo = $this->pdo;
-                $stmt = $pdo->prepare('SELECT id FROM users WHERE aadhar = ? limit 1');
-                $stmt->execute([$aadhar]);
-                if($stmt->rowCount() > 0){
-                    return false;
-                }else{
-                    return true;
-                }
-            }
-            public function checkUname($uname){
-                $pdo = $this->pdo;
-                $stmt = $pdo->prepare('SELECT id FROM users WHERE uname = ? limit 1');
-                $stmt->execute([$uname]);
-                if($stmt->rowCount() > 0){
-                    return false;
-                }else{
-                    return true;
-                }
-            }
-    private function registerWrongLoginAttemp($email){
-        $pdo = $this->pdo;
-        $stmt = $pdo->prepare('UPDATE users SET wrong_logins = wrong_logins + 1 WHERE email = ?');
-        $stmt->execute([$email]);
-    }
-
-    private function hashPass($pass){
-        return password_hash($pass, PASSWORD_DEFAULT);
-    }
-
-    public function printMsg(){
-        print $this->msg;
-    }
-
-
-    public function logout() {
-        $_SESSION['user'] = null;
-        session_regenerate_id();
-        return true;
-    }
-
-
-    public function checkOtp($otp,$email){
-        $pdo = $this->pdo;
-        $stmt = $pdo->prepare('SELECT confirm_code FROM users WHERE email = ? limit 1');
-        $stmt->execute([$email]);
-        if($stmt->rowCount() > 0){
-           $fotp = $stmt->fetch();
-
-           if($fotp[0]==$otp)
-           {
-
-             return true;
-           }
-           else {
-              return false;
-             }
-        }else{
-            return false;
-        }
-    }
-
-
-
-
-
-
+}
   public  function crtstr($str){
 
 		 $str =  trim($str);
 		 $str = nl2br(htmlentities(addslashes((strip_tags($str)))));
 		 return $str;
 	 }
+public function getUserId(){
+  return $_SESSION['user']['id'];
+}
+public function getComplaintById($qid){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select * from complaints where qid = ? ');
+  $stmt->execute([$qid]);
+  if($stmt->rowCount() == 1){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  }else{
+      return false;
+  }
+
+}
+public function registerBy($uid){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select uname,fname from users where id = ? limit 1');
+  $stmt->execute([$uid]);
+  if($stmt->rowCount() == 1){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['fname'];
+  }else{
+      return false;
+  }
+}
+public function tagedMLA($eid){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select electedMember,constituency,did from assemblymembers where eid = ? limit 1');
+  $stmt->execute([$eid]);
+  if($stmt->rowCount() == 1){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  }else{
+      return false;
+  }
+}
+public function getDistrict($did){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select name from district where did = ? limit 1');
+  $stmt->execute([$did]);
+  if($stmt->rowCount() == 1){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['name'];
+  }else{
+      return false;
+  }
+}
+public function liveSearchData(){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select electedMember from assemblymembers');
+  $stmt->execute();
+  if($stmt->rowCount() > 0){
+      while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $data[]=$result['electedMember'];
+      }
+            return $data;
+  }else{
+      return false;
+  }
+}
+public function getNameByUID($uid){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select uname from users where id = ? limit 1');
+  $stmt->execute([$uid]);
+  if($stmt->rowCount() == 1){
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['uname'];
+  }else{
+      return false;
+  }
+
+}
 }
