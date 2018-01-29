@@ -98,7 +98,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 		  			</td>
 		  			<td>
-		  				<button type="submit" ><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Check report</button>
+		  				<button id="check" type="submit" ><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Check report</button>
 							</form>
 		  			</td>
 		  			<td>

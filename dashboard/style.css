@@ -81,6 +81,14 @@ margin-right: 10%;
 	font-size: 12px;
 }
 
+@media(max-width: 420px){
+	.ui-widget #check{
+		width: 110px;
+	}
+	.right{
+		width : 55px;
+	}
+}
 .right{
 	margin: 0 0 0 20px;
 }
@@ -369,4 +377,3 @@ footer ul li a:hover{
   text-decoration: underline;
 }
 /* Ended here */
-
