@@ -217,4 +217,9 @@ public function getEid($name){
       return false;
   }
 }
+public function updateViews($qid){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('update complaints set views = views+1 where qid = ?');
+  $stmt->execute([$qid]);
+}
 }

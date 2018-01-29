@@ -10,6 +10,7 @@ if(isset($_GET['on']) and isset($_GET['id'])){
 			  $constituency = $mlaConst['constituency'];
 				$district = $mlaConst['did'];
 				$district = $user->getDistrict($district);
+				$user->updateViews($_GET['id']);
 		}}else {
 			header('Location: ../dashboard');
 			exit();
@@ -78,7 +79,8 @@ if(isset($_GET['on']) and isset($_GET['id'])){
 									<tr><td><span style="font-size: 16px;font-weight: bold;" >views</span></td><td><span>  <?php echo $complaint['views'];  ?></span></td></tr>
 									<tr><td><span style="font-size: 16px;font-weight: bold;" >Registered On</span></td><td><span> <?php echo $complaint['time'];  ?></span></td></tr>
 									<tr><td><span style="font-size: 16px;font-weight: bold;" >Registered By</span></td><td><span> <?php print(strtoupper($user->registerBy($complaint['uid'])));  ?></span></td></tr>
-									<tr><td><span style="font-size: 16px;font-weight: bold;" > Taged MLA</span></td><td><span> Mr.<?php if(isset($mla))echo strtoupper($mla);  ?></span><br>
+									<tr><td><span style="font-size: 16px;font-weight: bold;" > Taged MLA</span></td><td><span> Mr.<?php if(isset($mla))echo strtoupper($mla);  ?></span>
+										<tr><td><span style="font-size: 16px;font-weight: bold;" >Constituency</span></td><td><span><?php if(isset($constituency))echo strtoupper($constituency);  ?></span><br>
 									<tr><td><span style="font-size: 16px;font-weight: bold;" >District</span></td><td><span><?php if(isset($district))echo strtoupper($district);  ?></span><br></td></tr>
 									<tr><td></table><div class="flowchart">
 										<h3>Statuts of Complaint</h3>

@@ -51,26 +51,17 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 <html lang="en">
 <head>
 	<title>Dashboard Community</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-	<!-- jQuery library -->
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+ <meta name="HandheldFriendly" content="true" />
+ <meta name="theme-color" content="#333">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   	<link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
-
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 	<link rel="stylesheet" type="text/css" href="style.css">
-
 	<script src="js/jquery.easy-autocomplete.min.js"></script>
 	<link rel="stylesheet" href="js/easy-autocomplete.min.css">
 	<script>
@@ -199,8 +190,10 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 
 						<div class="post-item">
-							<h3>My Complaints</h3>
-							<?php if($myComplaints=myComplaintsExist()){foreach ($myComplaints as $key => $value): ?>
+
+							<?php if($myComplaints=myComplaintsExist()){ ?>
+								<h3>My Complaints</h3>
+							<?php	foreach ($myComplaints as $key => $value): ?>
 								<div class="panel panel-default"style="cursor: pointer;" onclick="redirect('<?php echo $myComplaints[$key]["qid"]; ?>')" >
 									 <div class="panel-body">
 										 <div class="views">
@@ -230,7 +223,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 					<div class="col-md-4">
 						<div class="posts">
-							<h4>Recent Complaint</h4>
+							<pre>Recent Complaints</pre>
 							<?php if($otherComplaints=otherComplaintsExist()){?>
 		 <?php foreach ($otherComplaints as $key => $value): ?>
 			 <div class="other-post" style="cursor: pointer;" onclick="redirect('<?php echo $otherComplaints[$key]["qid"]; ?>')">
