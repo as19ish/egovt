@@ -38,10 +38,11 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 		$qid = substr(md5(uniqid(rand(), TRUE)),0,8);
 		$title = $user->crtstr($_POST['title']);
 		$prob = $user->crtstr($_POST['complaint']);
-		if($user->addComplaints($qid,$prob,$uid,$title))
-		{
+		$eid = $user->getEid($_POST['area']);
+		if($user->addComplaints($qid,$prob,$uid,$title,$eid)){
 
 		}
+
 	}
 }
 
@@ -69,6 +70,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<link rel="stylesheet" type="text/css" href="style.css">
+
 	<script src="js/jquery.easy-autocomplete.min.js"></script>
 	<link rel="stylesheet" href="js/easy-autocomplete.min.css">
 	<script>
@@ -90,7 +92,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 					<td>
 		  				<form method = "get" action="../report" >
 		  					<div class="form-group">
-		   						<input type="text" id="example-ajax-post" class="form-control" name="mla" placeholder="Ex. Trivendra singh rawat">
+		   						<input type="text" id="report" class="form-control" name="mla" placeholder="Ex. Trivendra singh rawat">
 									<input type='hidden' value="<?php echo $token; ?>" name= 'token' >
 		   					</div>
 
@@ -102,9 +104,9 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 		  			<td>
 							 <?php
               if($logedUser){?>
-		  				<button class="right">
+		  				<a href="../sout.php" ><button class="right">
 						Sign out
-						</button>
+					</button></a>
 					<?php }else{ ?>
 						<a href="../account" ><button class="right">
 					  Sign in
@@ -123,7 +125,9 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 			<div class="row">
 				<div class="col-md-7">
 					<div class="post">
+            <form method="post" action="" >
 						<table>
+
 							<tr>
 								<td>
 									<label>Title</label>
@@ -151,34 +155,34 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 							<div class="dist">
 								<h4>Select District</h4>
-								<select>
-									<option>Almora</option>
-									<option>Bageshwar</option>
-									<option>Chamoli</option>
-									<option>Champawat</option>
-									<option>Dehradun</option>
-									<option>Haridwar</option>
-									<option>Nainital</option>
-									<option>Pauri</option>
-									<option>Pithoragarh</option>
-									<option>Rudraprayag</option>
-									<option>Tehri</option>
-									<option>U.S Nagar</option>
-									<option>Uttarkashi</option>
+								<select name='did' required >
+									<option value='1' >Almora</option>
+									<option value='2' >Bageshwar</option>
+									<option value='3' >Chamoli</option>
+									<option value='4' >Champawat</option>
+									<option value='5' >Dehradun</option>
+									<option value='6' >Haridwar</option>
+									<option value='7' >Nainital</option>
+									<option value='8' >Pauri</option>
+									<option value='9' >Pithoragarh</option>
+									<option value='10' >Rudraprayag</option>
+									<option value='11' >Tehri</option>
+									<option value='12' >U.S Nagar</option>
+									<option value='13' >Uttarkashi</option>
 								</select>
 							</div>
 
 							<div class="pin">
 								<div class="form-group">
-									<h4>Pincode</h4>
-									<input type="text" name="" class="form-control" placeholder="Ex. 248713">
+									<h4>Area</h4>
+									<input type="text" name="area" id="area" class="form-control" placeholder="Ex. Kashipur" required >
 								</div>
 							</div>
 
 							<div class="addrs">
 								<div class="form-group">
 									<h4>Full address</h4>
-									<input type="text" name="" placeholder="Ex. Behind church , Cement town  Dehradun" class="form-control">
+									<input type="text" name="address" placeholder="Ex. Behind church , Cement town  Dehradun" class="form-control" required >
 								</div>
 							</div>
 						</div>
@@ -253,7 +257,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 			 <div class="other-post" style="cursor: pointer;" onclick="redirect('<?php echo $otherComplaints[$key]["qid"]; ?>')">
 					<div class="link">
 
-							<span style="font-size: 16px;font-weight: bold;"><?php echo $otherComplaints[$key]['title'];  ?></span>&nbsp&nbsp<span  style="font-size: 14px;" ><?php echo substr($otherComplaints[$key]['prob'],0,140).'.....';  ?> </span>
+							<span style="font-size: 16px;font-weight: bold;"><?php echo $otherComplaints[$key]['title'];  ?></span>&nbsp&nbsp<span  style="font-size: 14px;" ><?php echo substr($otherComplaints[$key]['prob'],0,120).'.....';  ?> </span>
 					</div>
 					<div class="time">
 						<span >

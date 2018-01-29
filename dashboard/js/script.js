@@ -23,7 +23,7 @@ var options = {
   },
 
   preparePostData: function(data) {
-    data.phrase = $("#example-ajax-post").val();
+    data.phrase = $("#report").val();
     return data;
   },
 	list: {
@@ -42,5 +42,43 @@ var options = {
 
 
 };
+var option = {
 
-$("#example-ajax-post").easyAutocomplete(options);
+  url: function(phrase) {
+    return "area.php";
+  },
+
+  getValue: function(element) {
+    return element.name;
+  },
+
+  ajaxSettings: {
+    dataType: "json",
+    method: "POST",
+    data: {
+      dataType: "json"
+    }
+  },
+
+  preparePostData: function(data) {
+    data.phrase = $("#area").val();
+    return data;
+  },
+	list: {
+		showAnimation: {
+			type: "fade", //normal|slide|fade
+			time: 40,
+			callback: function() {}
+		},
+
+		hideAnimation: {
+			type: "slide", //normal|slide|fade
+			time: 400,
+			callback: function() {}
+		}
+	}
+
+
+};
+$("#report").easyAutocomplete(options);
+$("#area").easyAutocomplete(option);

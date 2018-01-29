@@ -101,10 +101,10 @@ public function myComplaints($id){
   }
 
 }
-public function addComplaints($qid,$prob,$uid,$title){
+public function addComplaints($qid,$prob,$uid,$title,$eid){
     $pdo = $this->pdo;
-    $stmt = $pdo->prepare('INSERT INTO `complaints` (`qid`,`prob`,`uid`,`title`) VALUES(?,?,?,?)');
-    $stmt->execute([$qid,$prob,$uid,$title]);
+    $stmt = $pdo->prepare('INSERT INTO `complaints` (`qid`,`prob`,`uid`,`title`,`eid`) VALUES(?,?,?,?,?)');
+    $stmt->execute([$qid,$prob,$uid,$title,$eid]);
     if($stmt->rowCount()==1){
       return true;
     }else {
@@ -190,5 +190,31 @@ public function getNameByUID($uid){
       return false;
   }
 
+}
+public function areaSearchData(){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select constituency from assemblymembers');
+  $stmt->execute();
+  if($stmt->rowCount() > 0){
+      while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $data[]=$result['constituency'];
+      }
+            return $data;
+  }else{
+      return false;
+  }
+}
+public function getEid($name){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select eid  from assemblymembers where constituency = ? limit 1');
+  $stmt->execute([$name]);
+    if($stmt->rowCount() == 1){
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+      return  $result['eid'];
+
+
+  }else{
+      return false;
+  }
 }
 }

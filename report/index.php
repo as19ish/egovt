@@ -31,7 +31,7 @@ if(isset($_GET['mla']) and isset($_GET['token'])){
 		 exit();
 	}
 }else {
-	   header('Location: ../dashboard');
+	  header('Location: ../dashboard');
 	  exit();
 }
 
