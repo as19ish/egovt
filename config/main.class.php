@@ -214,12 +214,25 @@ public function getEid($name){
 
 
   }else{
-      return false;
+      return 25;
   }
 }
 public function updateViews($qid){
   $pdo = $this->pdo;
   $stmt = $pdo->prepare('update complaints set views = views+1 where qid = ?');
   $stmt->execute([$qid]);
+}
+public function oldComplaints(){
+  $pdo = $this->pdo;
+  $stmt = $pdo->prepare('select * from complaints  Limit 3');
+  $stmt->execute();
+  if($stmt->rowCount() > 0){
+      while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $myComplaints[]=$result;
+      }
+            return $myComplaints;
+  }else{
+      return false;
+  }
 }
 }

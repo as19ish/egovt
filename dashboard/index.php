@@ -10,29 +10,14 @@ if($user->checkLogin())
 }else {
 	$logedUser = false;
 }
-
-
-
-function myComplaintsExist(){
-	global $uid,$user;
-	if($myComplaints = $user->myComplaints($uid)){
-		return $myComplaints;
-	}else{
-		return false;
-	}
-}
-function otherComplaintsExist(){
-	global $user,$uid;
-	if($otherComplaints = $user->otherComplaints($uid)){
-		return $otherComplaints;
-	}else{
-		return false;
-	}
-}
+//Token
 if (empty($_SESSION['token'])) {
     $_SESSION['token'] = md5(uniqid(rand(), TRUE));
 }
 $token = $_SESSION['token'];
+//
+
+
 if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['complaint'] and $logedUser){
 	if($_POST['token']==$_SESSION['token']){
 		$qid = substr(md5(uniqid(rand(), TRUE)),0,8);
@@ -109,14 +94,99 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 		  	</table>
 		</div>
 	</header>
-
+<?php if(!$logedUser){ ?>
 	<section>
 
 		<div class="container">
 			<div class="row">
 				<div class="col-md-7">
 					<div class="post">
-            <form method="post" action="" >
+						<div class="headng">
+            				<h3>Registered complaints</h3>
+            				<a href="../account" ><button>Register complaint</button></a>
+            			</div>
+									<?php if($otherComplaintsExist=$user->otherComplaints($uid)){ ?>
+
+									<?php	foreach ($otherComplaintsExist as $key => $value): ?>
+										<div class="panel panel-default"style="cursor: pointer;" onclick="redirect('<?php echo $otherComplaintsExist[$key]["qid"]; ?>')" >
+											 <div class="panel-body">
+												 <div class="views">
+													 <center><h4><?php echo $otherComplaintsExist[$key]['views'];  ?><br>Views</h4></center>
+												 </div>
+												 <div class="link">
+
+														 <span style="font-size: 19px;font-weight: bold;"><?php echo $otherComplaintsExist[$key]['title'];  ?></span>&nbsp&nbsp<span  style="font-size: 17px;" ><?php echo substr($otherComplaintsExist[$key]['prob'],0,120).'.....';  ?></span>
+												 </div>
+												 <div class="time">
+													 <span >
+														<?php echo $otherComplaintsExist[$key]['time'];  ?>
+													 </span>
+													 <span><a href="javascript:void(0)">@<?php echo $user->getNameByUID($otherComplaintsExist[$key]['uid']); ?></a></span>
+												 </div>
+											 </div>
+									 </div>
+								 <?php endforeach; } ?>
+
+
+
+					</div>
+				</div>
+
+					<div class="col-md-1">
+					</div>
+
+					<div class="col-md-4">
+						<div class="posts">
+							<pre>Old Complaints</pre>
+							<?php if($oldComplaints=$user->oldComplaints()){?>
+		 <?php foreach ($oldComplaints as $key => $value): ?>
+			 <div class="other-post" style="cursor: pointer;" onclick="redirect('<?php echo $oldComplaints[$key]["qid"]; ?>')">
+					<div class="link">
+
+							<span style="font-size: 16px;font-weight: bold;"><?php echo $oldComplaints[$key]['title'];  ?></span>&nbsp&nbsp<span  style="font-size: 14px;" ><?php echo substr($oldComplaints[$key]['prob'],0,120).'.....';  ?> </span>
+					</div>
+					<div class="time">
+						<span >
+							<?php echo $oldComplaints[$key]['time'];  ?>
+						</span>
+						<span><a href="javascript:void(0)">@<?php echo $user->getNameByUID($oldComplaints[$key]['uid']); ?></a></span>
+					</div>
+				</div>
+		 <?php endforeach; }?>
+
+
+		  				</div>
+					</div>
+				</div>
+			</div>
+			<footer>
+    <div class="container-fluid">
+      <div class="content-wrap">
+        <div class="footer_head">
+          <div class="flogo">e</div><h1><span style="font-family:'Monoton', cursive;font-size:36px;">GOV</span></h1>
+        </div>
+          <div class="footer-content">
+            <ul>
+              <li><a href="javascript:void(0)">About us</a></li>
+              <li><a href="javascript:void(0)" id="click_about">Feedback us</a></li>
+              <li><a href="javascript:void(0)">Terms</a></li>
+              <li><a href="javascript:void(0)">Help</a></li>
+              <li><a href="javascript:void(0)">Privacy</a></li>
+            </ul>
+          </div>
+          <span>&copy; &nbsp;Copyright 2k17 ShC.</span>
+      </div>
+    </div>
+</footer>
+	</section>
+<?php }else{ ?>
+	<section>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-7">
+					<div class="post">
+						<form method="post" action="" >
 						<table>
 
 							<tr>
@@ -132,7 +202,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 									</div>
 								</td>
 								<td>
-									<button>How to ask?</button>
+									<button type="button" id="how" >How to ask?</button>
 								</td>
 							</tr>
 						</table>
@@ -191,7 +261,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 						<div class="post-item">
 
-							<?php if($myComplaints=myComplaintsExist()){ ?>
+							<?php if($myComplaints=$user->myComplaints($uid)){ ?>
 								<h3>My Complaints</h3>
 							<?php	foreach ($myComplaints as $key => $value): ?>
 								<div class="panel panel-default"style="cursor: pointer;" onclick="redirect('<?php echo $myComplaints[$key]["qid"]; ?>')" >
@@ -201,7 +271,7 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 										 </div>
 										 <div class="link">
 
-												 <span style="font-size: 19px;font-weight: bold;"><?php echo $myComplaints[$key]['title'];  ?></span>&nbsp&nbsp<span  style="font-size: 17px;" ><?php echo $myComplaints[$key]['prob'];  ?></span>
+												 <span style="font-size: 19px;font-weight: bold;"><?php echo $myComplaints[$key]['title'];  ?></span>&nbsp&nbsp<span  style="font-size: 17px;" ><?php echo substr($myComplaints[$key]['prob'],0,320).'.....';  ?></span>
 										 </div>
 										 <div class="time">
 											 <span >
@@ -223,8 +293,8 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 
 					<div class="col-md-4">
 						<div class="posts">
-							<pre>Recent Complaints</pre>
-							<?php if($otherComplaints=otherComplaintsExist()){?>
+							<pre>Recent Complaints By Others</pre>
+							<?php if($otherComplaints=$user->otherComplaints($uid)){?>
 		 <?php foreach ($otherComplaints as $key => $value): ?>
 			 <div class="other-post" style="cursor: pointer;" onclick="redirect('<?php echo $otherComplaints[$key]["qid"]; ?>')">
 					<div class="link">
@@ -241,30 +311,42 @@ if(isset($_POST['submit']) and $_POST['token'] and $_POST['title'] and $_POST['c
 		 <?php endforeach; }?>
 
 
-		  				</div>
+							</div>
 					</div>
 				</div>
 			</div>
 			<footer>
-    <div class="container-fluid">
-      <div class="content-wrap">
-        <div class="footer_head">
-          <div class="flogo">e</div><h1><span style="font-family:'Monoton', cursive;font-size:36px;">GOV</span></h1>
-        </div>
-          <div class="footer-content">
-            <ul>
-              <li><a href="javascript:void(0)">About us</a></li>
-              <li><a href="javascript:void(0)" id="click_about">Feedback us</a></li>
-              <li><a href="javascript:void(0)">Terms</a></li>
-              <li><a href="javascript:void(0)">Help</a></li>
-              <li><a href="javascript:void(0)">Privacy</a></li>
-            </ul>
-          </div>
-          <span>&copy; &nbsp;Copyright 2k17 ShC.</span>
-      </div>
-    </div>
+		<div class="container-fluid">
+			<div class="content-wrap">
+				<div class="footer_head">
+					<div class="flogo">e</div><h1><span style="font-family:'Monoton', cursive;font-size:36px;">GOV</span></h1>
+				</div>
+					<div class="footer-content">
+						<ul>
+							<li><a href="javascript:void(0)">About us</a></li>
+							<li><a href="javascript:void(0)" id="click_about">Feedback us</a></li>
+							<li><a href="javascript:void(0)">Terms</a></li>
+							<li><a href="javascript:void(0)">Help</a></li>
+							<li><a href="javascript:void(0)">Privacy</a></li>
+						</ul>
+					</div>
+					<span>&copy; &nbsp;Copyright 2k17 ShC.</span>
+			</div>
+		</div>
 </footer>
 	</section>
+	<?php } ?>
+	<div class="popup" >
+
+		 <h3>How to ask?</h3><span  id="close" onclick="hide()">x</span>
+		 <ul type="circle">
+			 <li>In title field you just have to put title in 20-30 words.</li>
+			 <li>In Discuss field you have to give the info in detail so that it is understandable by ministers ,everything should be clear.</li>
+			 <li>Select your district</li>
+			 <li>Enter your area zone(City) Ex. Kashipur</li>
+			 <li>Provide your full address</li>
+		 </ul>
+	 </div>
 	<script src="js/script.js" ></script>
 </body>
 </html>
