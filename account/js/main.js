@@ -59,8 +59,16 @@ jQuery.validator.addMethod("email", function(value, element) {
 					required: true,
 					minlength: 10,
 					maxlength: 10,
-					digits: true
-
+					digits: true,
+					remote: {
+			 url: "ajax.php",
+			 type: "post",
+			 data: {
+				 mobile: function() {
+					 return $( "#mobile" ).val();
+				 }
+			 }
+		 }
 				},
 				aadhar: {
 					required: true,
@@ -84,20 +92,21 @@ jQuery.validator.addMethod("email", function(value, element) {
 				},
 				username: {
 					required : "",
-					username : "Enter vailid user name",
+					username : "Enter valid user name",
           remote : "Already exists"
 				},
 				mobile: {
 					required: "",
-					minlength: "Enter vailid Mobile no",
-					maxlength: "Enter vailid Mobile no",
-					digits: "Enter vailid Mobile no",
+					minlength: "Enter valid Mobile no",
+					maxlength: "Enter valid Mobile no",
+					digits: "Enter valid Mobile no",
+					remote : "Already exists"
 				},
 				aadhar: {
           required : "",
-					minlength: "Enter vailid 12 digit Aadhar no",
-					maxlength: "Enter vailid 12 digit Aadhar no",
-					digits: "Enter vailid 12 digit Aadhar no",
+					minlength: "Enter valid 12 digit Aadhar no",
+					maxlength: "Enter valid 12 digit Aadhar no",
+					digits: "Enter valid 12 digit Aadhar no",
 					remote : "Already exists"
 				},
 
